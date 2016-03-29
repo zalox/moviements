@@ -8,4 +8,11 @@ router.get('/', function(req, res) {
   });
 });
 
+router.post('/review', function(req, res) {
+  var review = req.body.review;
+  res.render('review', {
+    review: review
+  });
+});
+
 module.exports = router;

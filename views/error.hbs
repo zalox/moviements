@@ -1,4 +1,8 @@
 {{> page/nav}}
 
-<b>{{ error }}</b>
-{{ message }}
+<div class="col-xs-12 col-md-6 col-md-offset-3">
+    <div class="text-center">
+        <h1>{{ error }}</h1>
+    </div>
+    <textarea title="message" class="form-control" readonly>{{ message }}</textarea>
+</div>
