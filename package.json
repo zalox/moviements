@@ -16,6 +16,8 @@
   },
   "devDependencies": {
     "express-handlebars": "^3.0.0",
+    "express-session": "^1.13.0",
+    "mongoose": "^4.4.10",
     "nodemon": "^1.9.1"
   }
 }
