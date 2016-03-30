@@ -9,3 +9,8 @@
 $ npm install
 $ npm start
 ```
+
+## Flush database
+```
+$ mongo moviements --eval "db.getCollectionNames().forEach(function(n){db[n].remove({})});"
+```

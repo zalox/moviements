@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var Review = require('../models/review');
 var dateFormatter = require('../helpers/RelativeDate.js');
+var sentimentAnalysis = require('../helpers/SentimentAnalysis.js');
 
 /* GET home page. */
 router.get('/', function(req, res) {
@@ -58,6 +59,7 @@ router.post('/review', function(req, res) {
       });
     }
   });
+  sentimentAnalysis(review);
 });
 
 module.exports = router;
