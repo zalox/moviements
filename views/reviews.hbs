@@ -13,7 +13,7 @@
             <td>Date</td>
         </tr>
         {{#each reviews}}
-        <tr>
+        <tr data-toggle="modal" data-id="{{@index}}" data-target="#modalReview{{@index}}">
             <td>{{@index}}</td>
             <td>{{movie}}</td>
             <td>{{title}}</td>
@@ -26,4 +26,35 @@
         </tr>
         {{/each}}
     </table>
+
+    {{#each reviews}}
+    <!-- Modal -->
+    <div class="modal fade" id="modalReview{{@index}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">{{movie}}</h4>
+                </div>
+                <div class="modal-body">
+                    <h4>{{title}}</h4>
+                    <p>{{review}}</p>
+                    <br/>
+                    {{#if score}}
+                    <p>Score: {{score}}</p>
+                    {{else}}
+                    <p>Score: Not available</p>
+                    {{/if}}
+                    <br/>
+                    <p class="text-right">{{date}}</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/each}}
+    <div id="reviewimport" ></div>
+    <script src="/javascripts/reviews.js"></script>
 </div>

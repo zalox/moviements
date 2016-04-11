@@ -7,5 +7,11 @@
 ## Run project
 ```
 $ npm install
+$ npm pack
 $ npm start
+```
+
+## Flush database
+```
+$ mongo moviements --eval "db.getCollectionNames().forEach(function(n){db[n].remove({})});"
 ```

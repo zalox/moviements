@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var Review = require('../models/review');
 var dateFormatter = require('../helpers/RelativeDate.js');
+var sentimentAnalysis = require('../helpers/SentimentAnalysis.js');
 
 /* GET home page. */
 router.get('/', function(req, res) {
@@ -10,7 +11,7 @@ router.get('/', function(req, res) {
   });
 });
 
-router.get('/reviews', function(req, res) {
+router.get('/reviews/:json?', function(req, res) {
   Review.find({}, function(err, reviews) {
     if (err) {
       res.render('error', {
@@ -30,10 +31,14 @@ router.get('/reviews', function(req, res) {
         };
         formatted_reviews.push(review);
       });
-      res.render('reviews', {
-        title: 'Reviews',
-        reviews: formatted_reviews
-      });
+      if(req.params.json){
+        res.json(formatted_reviews);
+      } else {
+        res.render('reviews', {
+          title: 'Reviews',
+          reviews: formatted_reviews
+        });
+      }
     }
   });
 });
@@ -58,6 +63,7 @@ router.post('/review', function(req, res) {
       });
     }
   });
+  sentimentAnalysis(review);
 });
 
 module.exports = router;
