@@ -11,7 +11,7 @@ router.get('/', function(req, res) {
   });
 });
 
-router.get('/reviews', function(req, res) {
+router.get('/reviews/:json?', function(req, res) {
   Review.find({}, function(err, reviews) {
     if (err) {
       res.render('error', {
@@ -31,10 +31,14 @@ router.get('/reviews', function(req, res) {
         };
         formatted_reviews.push(review);
       });
-      res.render('reviews', {
-        title: 'Reviews',
-        reviews: formatted_reviews
-      });
+      if(req.params.json){
+        res.json(formatted_reviews);
+      } else {
+        res.render('reviews', {
+          title: 'Reviews',
+          reviews: formatted_reviews
+        });
+      }
     }
   });
 });
