@@ -20,9 +20,9 @@ router.get('/reviews/:json?', function(req, res) {
       });
     } else {
       var formatted_reviews = [];
-
       reviews.forEach(function(_review){
         var review = {
+          id: _review._id,
           movie: _review.movie,
           title: _review.title,
           review: _review.review,
@@ -34,10 +34,7 @@ router.get('/reviews/:json?', function(req, res) {
       if(req.params.json){
         res.json(formatted_reviews);
       } else {
-        res.render('reviews', {
-          title: 'Reviews',
-          reviews: formatted_reviews
-        });
+        res.render('reviews');
       }
     }
   });

@@ -18,6 +18,7 @@
     "jquery": "^2.2.3",
     "morgan": "~1.6.1",
     "newyorktimes": "0.0.2",
+    "nlp_compromise": "^4.6.1",
     "react": "^0.14.7",
     "react-dom": "^0.14.7",
     "sentiment": "^1.0.6",

@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
 
+import dateFormatter from '../../helpers/RelativeDate.js'
+  ;
 const api_key = "api_key=b03111368579a70db5e56b9da38717f5";
 
 const picks = "http://api.themoviedb.org/3/movie/popular";
@@ -9,9 +11,79 @@ const search = "http://api.themoviedb.org/3/search/movie";
 const review = "http://api.themoviedb.org/3/movie";
 
 class ImportButton extends React.Component {
-  render(){
+  render() {
     return <button className="btn btn-default" value={this.props.id} onClick={this.props.onClick}>Import</button>;
   }
+}
+
+class ReviewModal extends React.Component {
+  render(){
+    return(
+    <div id="reviewModal" className="modal fade" role="dialog">
+      <div className="modal-dialog">
+        <div className="modal-content">
+          <div className="modal-header">
+            <button type="button" className="close" data-dismiss="modal">&times;</button>
+            <h4 className="modal-title">Modal Header</h4>
+          </div>
+          <div className={"modal-body"}>
+            <h4 id="review-header" ></h4>
+            <p id="review-content" ></p><br/>
+            <p id="review-score" ></p><br/>
+            <p className={"text-right"} id="review-date" ></p>
+          </div>
+          <div className="modal-footer">
+            <button type="button" className={"btn btn-default"} data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    )
+  }
+}
+
+class ReviewListElement extends React.Component {
+  render(){
+    let onclick = (event) => {
+      $('#review-header').text(this.props.review.title);
+      $('#review-content').text(this.props.review.review);
+      $('#review-score').text(this.props.review.score);
+      $('#review-date').text(this.props.review.date);
+    };
+    let date = dateFormatter(this.props.review.release_date);
+    return <tr data-toggle="modal" data-target="#reviewModal" onClick={onclick}>
+          <td>{this.props.id}</td>
+        <td>{this.props.review.movie}</td>
+        <td>{this.props.review.author}</td>
+        <td>{this.props.review.score ? this.props.review.score : "N/A"}</td>
+        <td>{date}</td>
+      </tr>
+  }
+}
+
+class ReviewList extends React.Component {
+  render(){
+    var res = this.props.reviews.map((review, i)=><ReviewListElement review={review} id={i} />);
+    return <div>
+      <div className={"text-center"}>
+        <h1>Reviews</h1>
+      </div>
+      <table className={"table table-hover"}>
+        <thead>
+        <tr>
+          <td>#</td>
+          <td>Movie</td>
+          <td>Title</td>
+          <td>Score</td>
+          <td>Date</td>
+        </tr>
+        </thead>
+        <tbody>
+        { res }
+        </tbody>
+      </table>
+    </div>
+  };
 }
 
 class ListElement extends React.Component {
@@ -37,17 +109,22 @@ class ListElement extends React.Component {
   }
   render(){
     var onClick = (event) => {
+      console.log(this);
       $.ajax({
         url: "/review",
         type: "post",
         data: {
           review: this.state.result.content,
           movie: this.props.review.original_title,
-          title: this.state.result.author
+          title: this.state.result.author,
+          date: Date(this.props.review.release_date)
         },
         cache: false,
         error: (xhr, status, err) => {
           console.error(this.props.url, status, err.toString());
+        },
+        success: () => {
+          this.props.updateReviews();
         }
       })
     };
@@ -74,9 +151,20 @@ class SearchBox extends React.Component {
 class Application extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {movies: []};
+    this.state = {movies: [], reviews: []};
   }
-  componentDidMount() {
+  updateReviews(){
+    $.ajax({
+      url: "/reviews/json",
+      success: (data) => {
+        this.setState({reviews: data});
+      },
+      error: (xhr, status, err) => {
+        console.error(this.props.url, status, err.toString());
+      }
+    })
+  }
+  updateMovies(){
     $.ajax({
       url: picks + "?" + api_key,
       dataType: 'json',
@@ -89,8 +177,13 @@ class Application extends React.Component {
       }
     });
   }
+  componentDidMount() {
+    this.updateReviews();
+    this.updateMovies();
+  }
+
   render(){
-    var reviews = this.state.movies.map((review)=><ListElement review={review}/>);
+    var reviews = this.state.movies.map((review)=><ListElement review={review} updateReviews={this.updateReviews.bind(this)} />);
     var onClickSearch = (event) => {
       let url = search + "?" + api_key;
       let query = $('#movie-search').val();
@@ -107,6 +200,7 @@ class Application extends React.Component {
       });
     };
     return <div>
+      <ReviewList reviews={this.state.reviews} updateReviews={this.updateReviews.bind(this)} />
       <SearchBox onClick={onClickSearch} />
       <table className={"table table-hover"}>
         <thead>
@@ -121,6 +215,7 @@ class Application extends React.Component {
         { reviews }
         </tbody>
       </table>
+      <ReviewModal />
     </div>
   }
 }
