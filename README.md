@@ -7,6 +7,7 @@
 ## Run project
 ```
 $ npm install
+$ npm pack
 $ npm start
 ```
 
