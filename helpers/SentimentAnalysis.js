@@ -15,7 +15,7 @@ module.exports = function (review) {
     input += text.sentences[i].str + '\n';
   }
   input = input.substring(0, input.length - 1); // trim last \n character
-  var process = spawn('python', ['./pyscripts/vader.py', input]);
+  var process = spawn('python2.7', ['./pyscripts/vader.py', input]);
   var output = '';
   process.stdout.on('data', function(data) { output += data; });
   process.on('close', function(code) {
