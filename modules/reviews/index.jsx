@@ -24,7 +24,7 @@ class ReviewModal extends React.Component {
         <div className="modal-content">
           <div className="modal-header">
             <button type="button" className="close" data-dismiss="modal">&times;</button>
-            <h4 className="modal-title">Modal Header</h4>
+            <h4 className="modal-title" id={"review-title"}></h4>
           </div>
           <div className={"modal-body"}>
             <h4 id="review-header" ></h4>
@@ -45,6 +45,7 @@ class ReviewModal extends React.Component {
 class ReviewListElement extends React.Component {
   render(){
     let onclick = (event) => {
+      $('#review-title').text(this.props.review.movie);
       $('#review-header').text(this.props.review.title);
       $('#review-content').text(this.props.review.review);
       $('#review-score').text(this.props.review.score);
