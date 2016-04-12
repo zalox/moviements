@@ -11,6 +11,13 @@ router.get('/', function(req, res) {
   });
 });
 
+router.get('/add', function(req, res) {
+  res.render('form', {
+    title: 'Review'
+  });
+});
+
+
 router.get('/reviews/:json?', function(req, res) {
   Review.find({}, function(err, reviews) {
     if (err) {

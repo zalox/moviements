@@ -71,7 +71,7 @@ class ReviewList extends React.Component {
         <tr>
           <td>#</td>
           <td>Movie</td>
-          <td>Title</td>
+          <td>Source</td>
           <td>Score</td>
           <td>Date</td>
         </tr>
@@ -94,11 +94,11 @@ class ListElement extends React.Component {
       url: review + "/" + this.props.review.id + "/reviews?" + api_key,
       data: {id: this.props.review.id},
       success: (data) => {
+        let content = "";
         for (let r of data.results) {
-          if(r.content && r.author){
-            this.setState({result: {author: r.author, content: r.content}});
-          }
+          content += r.content;
         }
+        this.setState({result: {author: "Imported", content: content}});
       },
       error: (xhr, status, err) => {
         console.error(this.props.url, status, err.toString());
@@ -129,7 +129,8 @@ class ListElement extends React.Component {
     return <tr id={this.props.review.id}>
       <td>{this.props.review.original_title}</td>
       <td>{this.props.review.release_date}</td>
-      <td>{this.state.result.author}</td>
+      <td>{this.props.review.vote_average}</td>
+      <td>{this.props.review.vote_count}</td>
       <td><ImportButton onClick={onClick} id={this.props.review.id}/></td>
     </tr>;
   }
@@ -176,8 +177,9 @@ class Application extends React.Component {
     });
   }
   componentDidMount() {
-    this.updateReviews();
     this.updateMovies();
+    this.updateReviews();
+    setInterval(()=>this.updateReviews(), 1000);
   }
 
   render(){
@@ -205,7 +207,8 @@ class Application extends React.Component {
         <tr>
           <td>{"Movie"}</td>
           <td>{"Date"}</td>
-          <td>{"Author"}</td>
+          <td>{"Rating"}</td>
+          <td>{"Count"}</td>
           <td>{"Import"}</td>
         </tr>
         </thead>
