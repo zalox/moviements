@@ -2,8 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
 
-import dateFormatter from '../../helpers/RelativeDate.js'
-  ;
 const api_key = "api_key=b03111368579a70db5e56b9da38717f5";
 
 const picks = "http://api.themoviedb.org/3/movie/popular";
@@ -51,13 +49,12 @@ class ReviewListElement extends React.Component {
       $('#review-score').text(this.props.review.score);
       $('#review-date').text(this.props.review.date);
     };
-    let date = dateFormatter(this.props.review.release_date);
     return <tr data-toggle="modal" data-target="#reviewModal" onClick={onclick}>
           <td>{this.props.id}</td>
         <td>{this.props.review.movie}</td>
-        <td>{this.props.review.author}</td>
+        <td>{this.props.review.title}</td>
         <td>{this.props.review.score ? this.props.review.score : "N/A"}</td>
-        <td>{date}</td>
+        <td>{this.props.review.date}</td>
       </tr>
   }
 }
