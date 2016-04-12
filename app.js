@@ -33,7 +33,7 @@ app.use(require('express-session')({
 app.use('/', routes);
 
 var review = require('./models/review');
-mongoose.connect('mongodb://localhost/moviements');
+mongoose.connect('mongodb://mongo/moviements');
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
