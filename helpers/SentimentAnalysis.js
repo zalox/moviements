@@ -23,7 +23,7 @@ module.exports = function (review) {
       console.error('Wrong error code from python.');
       return;
     }
-    review.score = 5 + parseFloat(output)*5;
+    review.score = parseFloat(output);
     review.save(function (err) {
       if (err) {
         console.error(err);
